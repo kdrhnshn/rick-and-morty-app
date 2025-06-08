@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import CharacterTable from '../components/CharacterTable';
 import FilterBar from '../components/FilterBar';
 import Pagination from '../components/Pagination';
