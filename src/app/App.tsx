@@ -1,0 +1,107 @@
+import React, { useRef } from 'react';
+import CharacterTable from '../components/CharacterTable';
+import FilterBar from '../components/FilterBar';
+import Pagination from '../components/Pagination';
+import { useCharacters } from '../hooks/useCharacters';
+import CharacterDetails from '../components/CharacterDetails';
+
+function App() {
+  const {
+    filters,
+    setFilters,
+    loading,
+    error,
+    currentPage,
+    setCurrentPage,
+    pageSize,
+    setPageSize,
+    sortField,
+    setSortField,
+    sortDirection,
+    setSortDirection,
+    characterDetails,
+    selectedCharacterId,
+    setSelectedCharacterId,
+    setCharacterDetails,
+    detailsLoading,
+    detailRef,
+    paginatedCharacters,
+    totalPages,
+  } = useCharacters();
+
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const handleCloseDetails = () => {
+    setSelectedCharacterId(null);
+    setCharacterDetails(null);
+    // Scroll'u tabloya getir
+    setTimeout(() => {
+      tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
+
+  return (
+    <div className="App max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 font-sans text-gray-100">
+      <header className="text-center mb-10">
+        <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 drop-shadow-lg">
+          Rick and Morty Characters
+        </h1>
+        <p className="text-gray-400 mt-2 text-sm">Explore characters using smart filters, search and table tools</p>
+      </header>
+
+      <section className="bg-gray-900 rounded-xl p-6 shadow-md mb-8">
+        <FilterBar
+          onFilterChange={setFilters}
+          pageSize={pageSize}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          }}
+        />
+      </section>
+
+      {error && (
+        <div className="text-center text-red-400 font-medium mb-4">
+          {error}
+        </div>
+      )}
+
+      <section ref={tableRef} className="bg-gray-800 rounded-xl p-4 shadow-md overflow-x-auto">
+        <CharacterTable
+          characters={paginatedCharacters}
+          onSortChange={(field) => {
+            if (field === sortField) {
+              setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+            } else {
+              setSortField(field);
+              setSortDirection('asc');
+            }
+          }}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onRowClick={(char) => setSelectedCharacterId(char.id)}
+        />
+      </section>
+
+      <div className="mt-6">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+
+      {characterDetails && (
+        <div ref={detailRef} className="mt-10">
+          <CharacterDetails
+            character={characterDetails}
+            onClose={() => {handleCloseDetails();
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;

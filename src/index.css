@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -42,7 +44,6 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -62,9 +63,7 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
-  button {
-    background-color: #f9f9f9;
-  }
+  
 }
 
 
@@ -78,41 +77,6 @@ body {
   justify-content: center;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-th, td {
-  padding: 0.75rem;
-  border-bottom: 1px solid #444;
-  text-align: left;
-}
-
-th {
-  cursor: pointer;
-  background-color: #2b2b2b;
-  transition: background-color 0.2s ease;
-}
-
-th:hover {
-  background-color: #3b3b3b;
-}
-
-th.sortable::after {
-  content: ' ⬍';
-  color: #888;
-  font-size: 0.8em;
-}
-
-th.active-asc::after {
-  content: ' 🔼';
-}
-
-th.active-desc::after {
-  content: ' 🔽';
-}
 
 img {
   border-radius: 5px;
@@ -141,6 +105,8 @@ img {
   margin-top: 20px;
 }
 
+
+/*
 .pagination button {
   padding: 0.5rem 0.75rem;
   background-color: #2b2b2b;
@@ -162,3 +128,4 @@ img {
   color: white;
   box-shadow: 0 0 5px #007bff;
 }
+  */

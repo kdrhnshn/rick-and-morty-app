@@ -17,52 +17,73 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
 
   const renderPageNumbers = () => {
     const pages = [];
-  
-    // Always show first page
+
     pages.push(renderPage(1));
-  
-    // Show ellipsis if needed before currentPage - 1
+
     if (currentPage > 4) {
-      pages.push(<span key="start-ellipsis">...</span>);
+      pages.push(<span key="start-ellipsis" className="text-gray-400 px-2">...</span>);
     }
-  
-    // Pages around current
+
     for (let i = currentPage - 1; i <= currentPage + 1; i++) {
       if (i > 1 && i < totalPages) {
         pages.push(renderPage(i));
       }
     }
-  
-    // Show ellipsis if needed after currentPage + 1
+
     if (currentPage < totalPages - 3) {
-      pages.push(<span key="end-ellipsis">...</span>);
+      pages.push(<span key="end-ellipsis" className="text-gray-400 px-2">...</span>);
     }
-  
-    // Always show last page
+
     if (totalPages > 1) {
       pages.push(renderPage(totalPages));
     }
-  
+
     return pages;
   };
-  
-  const renderPage = (page: number) => (
-    <button
-      key={page}
-      onClick={() => onPageChange(page)}
-      className={page === currentPage ? 'active-page' : ''}
-    >
-      {page}
-    </button>
-  );
+
+  const renderPage = (page: number) => {
+    const isActive = page === currentPage;
+
+    return (
+      <button
+        key={page}
+        onClick={() => onPageChange(page)}
+        className={`px-4 py-2 mx-1 rounded-md font-medium transition duration-200 
+          ${isActive
+            ? "bg-grey-600 text-white ring-2 ring-blue-300 shadow-lg "
+            : "bg-slate-700 text-grey-100 hover:bg-slate-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"}
+        `}
+      >
+        {page}
+      </button>
+    );
+  };
 
   return (
-    <div className="pagination">
-      <button onClick={handlePrevious} disabled={currentPage === 1}>
+    <div className="flex justify-center items-center space-x-2 mt-8 bg-slate-800 p-4 rounded-xl">
+      <button
+        onClick={handlePrevious}
+        disabled={currentPage === 1}
+        className={`px-4 py-2 rounded-md font-medium transition duration-200
+          ${currentPage === 1
+            ? "bg-slate-600 text-slate-400 cursor-not-allowed"
+            : "bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"}
+        `}
+      >
         Previous
       </button>
+
       {renderPageNumbers()}
-      <button onClick={handleNext} disabled={currentPage === totalPages}>
+
+      <button
+        onClick={handleNext}
+        disabled={currentPage === totalPages}
+        className={`px-4 py-2 rounded-md font-medium transition duration-200
+          ${currentPage === totalPages
+            ? "bg-slate-600 text-slate-400 cursor-not-allowed"
+            : "bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"}
+        `}
+      >
         Next
       </button>
     </div>

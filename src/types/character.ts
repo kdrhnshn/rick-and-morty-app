@@ -20,3 +20,7 @@ export interface Character {
     url: string;
     created: string;
   }
+
+export type SortField = 'name' | 'status' | 'gender';
+
+export type SortDirection = 'asc' | 'desc';

@@ -125,9 +125,8 @@ export function CharacterTable({ pageSize, filters = {} }: CharacterTableProps) 
   );
 }*/
 
-// components/CharacterTable.tsx
-import React from 'react';
-import type { Character, SortField, SortDirection } from '../App';
+// components/CharacterTable.tsximport React from 'react';
+import type { Character, SortField, SortDirection } from '../types/character';
 
 interface Props {
   characters: Character[];
@@ -137,33 +136,88 @@ interface Props {
   onRowClick: (character: Character) => void;
 }
 
-const CharacterTable: React.FC<Props> = ({ characters, sortField, sortDirection, onSortChange, onRowClick }) => {
+const CharacterTable: React.FC<Props> = ({
+  characters,
+  sortField,
+  sortDirection,
+  onSortChange,
+  onRowClick,
+}) => {
   const renderSortArrow = (field: SortField) => {
     if (field !== sortField) return null;
-    return sortDirection === 'asc' ? ' 🔼' : ' 🔽';
+
+    return sortDirection === 'asc' ? (
+      <svg
+        className="inline w-3 h-3 ml-1 text-blue-400"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    ) : (
+      <svg
+        className="inline w-3 h-3 ml-1 text-blue-400"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    );
   };
 
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <th onClick={() => onSortChange('name')}>Name{renderSortArrow('name')}</th>
-          <th onClick={() => onSortChange('status')}>Status{renderSortArrow('status')}</th>
-          <th onClick={() => onSortChange('gender')}>Gender{renderSortArrow('gender')}</th>
-          <th>Image</th>
-        </tr>
-      </thead>
-      <tbody>
-        {characters.map((char) => (
-          <tr key={char.id} onClick={() => onRowClick(char)}>
-            <td>{char.name}</td>
-            <td>{char.status}</td>
-            <td>{char.gender}</td>
-            <td><img src={char.image} alt={char.name} width="50" height="50" /></td>
+    <div className="overflow-x-auto rounded-lg shadow-md">
+      <table className="min-w-full text-sm sm:text-base divide-y divide-gray-700 bg-gray-800 rounded-md">
+        <thead className="bg-gray-700 text-gray-100 uppercase tracking-wider text-xs ">
+          <tr>
+            <th
+              className="px-4 py-3 cursor-pointer hover:text-blue-400 hover:bg-gray-900"
+              onClick={() => onSortChange('name')}
+            >
+              Name {renderSortArrow('name')}
+            </th>
+            <th
+              className="px-4 py-3 cursor-pointer hover:text-blue-400 hover:bg-gray-900"
+              onClick={() => onSortChange('status')}
+            >
+              Status {renderSortArrow('status')}
+            </th>
+            <th
+              className="px-4 py-3 cursor-pointer hover:text-blue-400 hover:bg-gray-900"
+              onClick={() => onSortChange('gender')}
+            >
+              Gender {renderSortArrow('gender')}
+            </th>
+            <th className="px-4 py-3">Image</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody className="divide-y divide-gray-700">
+          {characters.map((char) => (
+            <tr
+              key={char.id}
+              onClick={() => onRowClick(char)}
+              className="hover:bg-gray-700 cursor-pointer transition duration-200"
+            >
+              <td className="px-4 py-2 font-medium text-white">{char.name}</td>
+              <td className="px-4 py-2 text-gray-300">{char.status}</td>
+              <td className="px-4 py-2 text-gray-300">{char.gender}</td>
+              <td className="px-4 py-2">
+                <img
+                  src={char.image}
+                  alt={char.name}
+                  className="w-12 h-12 rounded-md object-cover border border-gray-600"
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
