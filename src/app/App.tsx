@@ -7,9 +7,7 @@ import CharacterDetails from '../components/CharacterDetails';
 
 function App() {
   const {
-    filters,
     setFilters,
-    loading,
     error,
     currentPage,
     setCurrentPage,
@@ -20,10 +18,8 @@ function App() {
     sortDirection,
     setSortDirection,
     characterDetails,
-    selectedCharacterId,
     setSelectedCharacterId,
     setCharacterDetails,
-    detailsLoading,
     detailRef,
     paginatedCharacters,
     totalPages,
