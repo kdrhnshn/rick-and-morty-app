@@ -1,33 +1,38 @@
-// hooks/useCharacters.ts
+// React'ten gerekli hook'ları içe aktar
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Character, SortDirection, SortField } from '../types/character';
 
+// Filtreleme için kullanılacak tip tanımı
 interface Filters {
   name: string;
   status: string;
   gender: string;
 }
 
+// API'den filtrelere göre tüm sayfalardaki karakterleri getirir
 const fetchAllCharactersWithFilters = async (filters: Filters): Promise<Character[]> => {
+  // Filtre alanları doluysa URL parametrelerine eklenir
   const params = new URLSearchParams();
   if (filters.name) params.append('name', filters.name);
   if (filters.status) params.append('status', filters.status);
   if (filters.gender) params.append('gender', filters.gender);
   params.append('page', '1');
 
+  // İlk sayfa verisi çekilir
   const firstRes = await fetch(`https://rickandmortyapi.com/api/character/?${params.toString()}`);
   if (!firstRes.ok) throw new Error('API isteği başarısız.');
   const firstJson = await firstRes.json();
   let allResults: Character[] = [...firstJson.results];
   const totalPages = firstJson.info.pages;
 
+  // Kalan sayfalar için fetch işlemleri hazırlanır
   const pagePromises = [];
   for (let i = 2; i <= totalPages; i++) {
     const pageParams = new URLSearchParams(params);
     pageParams.set('page', i.toString());
     pagePromises.push(fetch(`https://rickandmortyapi.com/api/character/?${pageParams.toString()}`));
   }
-
+  // Tüm sayfalardan gelen veriler toplanır
   const responses = await Promise.all(pagePromises);
   for (const res of responses) {
     if (res.ok) {
@@ -39,6 +44,7 @@ const fetchAllCharactersWithFilters = async (filters: Filters): Promise<Characte
   return allResults;
 };
 
+// Karakterleri sıralamak için yardımcı fonksiyon
 const sortCharacters = (
   characters: Character[],
   sortField: SortField,
@@ -53,6 +59,7 @@ const sortCharacters = (
   });
 };
 
+// Sayfalama işlemi için yardımcı fonksiyon
 const paginateCharacters = (
   characters: Character[],
   currentPage: number,
@@ -62,12 +69,14 @@ const paginateCharacters = (
   return characters.slice(start, start + pageSize);
 };
 
+// Detay verisini ID'ye göre çeker
 const fetchCharacterDetailsById = async (id: number): Promise<Character> => {
   const res = await fetch(`https://rickandmortyapi.com/api/character/${id}`);
   if (!res.ok) throw new Error('Detay API isteği başarısız.');
   return res.json();
 };
 
+// Özel hook useCharacters
 export const useCharacters = () => {
   const [allCharacters, setAllCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(false);
@@ -102,7 +111,7 @@ export const useCharacters = () => {
     fetchData();
   }, [filters]);
 
-  // Fetch Details
+  // Fetch Detayları
   useEffect(() => {
     const getDetails = async () => {
       if (selectedCharacterId === null) return;
@@ -120,7 +129,7 @@ export const useCharacters = () => {
     getDetails();
   }, [selectedCharacterId]);
 
-  // Scroll to detail
+  // Detay penceresine scroll
   useEffect(() => {
     if (characterDetails && detailRef.current) {
       detailRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -139,6 +148,7 @@ export const useCharacters = () => {
 
   const totalPages = Math.ceil(sortedCharacters.length / pageSize);
 
+  // Hook'un dışa verdiği veriler ve fonksiyonlar
   return {
     filters,
     setFilters,

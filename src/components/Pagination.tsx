@@ -1,9 +1,9 @@
 import React from "react";
 
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  currentPage: number; // Şu anki sayfa numarası
+  totalPages: number;  // Toplam sayfa sayısı
+  onPageChange: (page: number) => void; // Sayfa değiştiğinde çağrılacak fonksiyon
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
@@ -16,6 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
   };
 
   const renderPageNumbers = () => {
+    // Sayfa numaralarını içeren bir dizi oluşturuluyor
     const pages = [];
 
     pages.push(renderPage(1));

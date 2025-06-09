@@ -1,12 +1,13 @@
+// Tip tanımlamalarını içeren dosyadan karakter, sıralama alanı ve yönü import ediliyor
 import type { Character, SortField, SortDirection } from '../types/character';
-
+// Bileşene dışarıdan gönderilecek prop'lar tanımlanıyor
 interface Props {
-  characters: Character[];
-  sortField: SortField;
-  sortDirection: SortDirection;
-  onSortChange: (field: SortField) => void;
-  onRowClick: (character: Character) => void;
-  loading: boolean;
+  characters: Character[]; // Görüntülenecek karakter listesi
+  sortField: SortField; // Şu an aktif sıralama alanı
+  sortDirection: SortDirection; // Artan mı azalan mı
+  onSortChange: (field: SortField) => void; // Sıralama tıklaması callback'i
+  onRowClick: (character: Character) => void; // Satıra tıklanma callback'i
+  loading: boolean; // Yüklenme durumu
 }
 
 const CharacterTable: React.FC<Props> = ({
@@ -17,9 +18,10 @@ const CharacterTable: React.FC<Props> = ({
   onRowClick,
   loading,
 }) => {
+  // Sıralama yönüne göre küçük bir ok simgesi döndürülür
   const renderSortArrow = (field: SortField) => {
-    if (field !== sortField) return null;
-
+    if (field !== sortField) return null; // Bu alan aktif değilse ok gösterilmez
+    // Yöne göre yukarı ya da aşağı ok
     return sortDirection === 'asc' ? (
       <svg
         className="inline w-3 h-3 ml-1 text-blue-400"
@@ -47,19 +49,20 @@ const CharacterTable: React.FC<Props> = ({
   return (
   <div className="overflow-x-auto rounded-lg shadow-md">
     
+    {/* Yükleniyorsa spinner gösterilir */}
     {
-      
       loading ? (
         <div className="flex justify-center items-center h-40">
           <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) :
-      
+      // Veri yoksa kullanıcı bilgilendirilir
       characters.length === 0 ? (
         <div className="text-center text-gray-400 py-6 text-sm sm:text-base">
           No characters found. Try adjusting your filters.
         </div>
     ) : (
+      // Aksi halde tablo gösterilir
       <table className="min-w-full text-sm sm:text-base divide-y divide-gray-700 bg-gray-800 rounded-md">
         <thead className="bg-gray-700 text-gray-100 uppercase tracking-wider text-xs ">
           <tr>
@@ -84,7 +87,9 @@ const CharacterTable: React.FC<Props> = ({
             <th className="px-4 py-3">Image</th>
           </tr>
         </thead>
+        
         <tbody className="divide-y divide-gray-700">
+          {/* Her karakter için bir tablo satırı render edilir */}
           {characters.map((char) => (
             <tr
               key={char.id}

@@ -1,16 +1,17 @@
 import React from 'react';
+// Character tipini tanımlayan tipi import ediyoruz
 import type { Character } from '../types/character';
-
+// Bileşene props olarak karakter bilgisi ve kapatma fonksiyonu geliyor
 interface CharacterDetailsProps {
   character: Character;
   onClose: () => void;
 }
 
 const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character, onClose }) => {
-  console.log("details worked...");
   
   return (
     <div className="mt-6 p-6 bg-gray-800 rounded-xl text-white relative shadow-md w-full max-w-xl mx-auto">
+      {/* Kapatma butonu sağ üst köşede konumlandırılır */}
       <button
         onClick={onClose}
         className="absolute top-3 right-3 text-gray-400 hover:text-red-400 text-2xl font-bold focus:outline-none"
@@ -19,7 +20,7 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character, onClose 
       </button>
 
       <h2 className="text-2xl font-bold mb-4 text-center">{character.name}</h2>
-
+      {/* Karakter bilgileri yatay bir kart biçiminde gösterilir */}
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
         <img
           src={character.image}

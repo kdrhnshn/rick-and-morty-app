@@ -1,17 +1,20 @@
+// Gerekli tipler içeri aktarılıyor
 import React, { useState, useEffect } from 'react';
 
 interface FilterBarProps {
   onFilterChange: (filters: { name: string; status: string; gender: string }) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  onPageSizeChange: (pageSize: number) => void;// Sayfa boyutu değişince çağrılan fonksiyo
   pageSize: number;
 }
 
+// React bileşeni tanımlanıyor
 const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, onPageSizeChange, pageSize }) => {
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [gender, setGender] = useState('');
   const [localPageSize, setLocalPageSize] = useState(pageSize);
 
+  // Filtre değişimlerini yakalar
   useEffect(() => {
     onFilterChange({ name, status, gender });
   }, [name, status, gender]);
@@ -21,8 +24,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, onPageSizeChange,
   }, [localPageSize]);
 
   return (
+    
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 bg-gray-900 p-4 rounded-md shadow-lg">
       <div>
+        {/* İsim filtresi */}
         <label className="block text-sm text-gray-300 mb-1">Search by name</label>
         <input
           type="text"
@@ -34,6 +39,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, onPageSizeChange,
       </div>
 
       <div>
+        {/* Durum filtresi (Alive, Dead, Unknown) */}
         <label className="block text-sm text-gray-300 mb-1">Status</label>
         <select
           value={status}
