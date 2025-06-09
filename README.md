@@ -1,54 +1,113 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite + Tailwind
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+----------------------
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Rick and Morty Karakter Tarayıcı (React + TypeScript)
 
-## Expanding the ESLint configuration
+Bu proje, Rick and Morty API’sinden alınan verilerle bir karakter listeleme uygulamasıdır. Modern frontend mimarisi, component tasarımı, performans bilinci ve kod kalitesi gibi konular ön planda tutulmuştur.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Projenin Amacı
+
+Bu proje; React, TypeScript ve Tailwind gibi teknolojilerle modern bir SPA geliştirerek aşağıdaki yetkinlikleri sergilemek amacıyla oluşturulmuştur:
+
+- React bileşen mimarisi ve custom hook kullanımı
+- API senkronizasyonu ve filtre/sıralama/pagination senaryoları
+- Performans ve kullanıcı deneyimi öncelikli frontend geliştirme
+- UI/UX detayları, boş sonuçlar ve hata yönetimi
+- TypeScript ile tip güvenliği ve okunabilirlik
+- Tailwind CSS ile utility-first modern UI yaklaşımı
+
+---
+
+## Klasör Yapısı
+
+src/
+├── components/ # Yeniden kullanılabilir UI bileşenleri
+├── hooks/ # useCharacters: tüm state ve fetch mantığı
+├── services/ # API işlemleri
+├── types/ # Tip tanımlamaları
+├── App.tsx # Uygulamanın omurgası
+└── main.tsx # Giriş noktası
+
+
+
+> Yapı, Separation of Concerns prensibine uygun olarak, her dosyayı tek sorumluluk alanına sahip olacak şekilde ayrıştırır. Bu, sürdürülebilirlik ve test edilebilirlik açısından tercih edilmiştir.
+
+---
+
+## ⚙️ Kullanılan Teknolojiler
+
+| Teknoloji         | Açıklama                                               |
+|-------------------|--------------------------------------------------------|
+| **React**         | Fonksiyonel bileşenlerle modern UI oluşturma           |
+| **TypeScript**    | Tip güvenliği ve IDE desteği                           |
+| **Tailwind CSS**  | Utility-first CSS framework ile hızlı ve esnek stil    |
+| **Vite**          | Modern ve hızlı build sistemi                          |
+
+
+##  Özellikler
+
+### Filtreleme
+
+- `status`, `gender`, `name` alanlarına göre filtreleme yapılır.
+- Filtreleme doğrudan API üzerinden yapılır (query parametreleriyle).
+  
+> **Neden?** Büyük veri setlerinde client-side filtre yerine server-side yapılması performans ve doğruluk açısından daha uygundur.
+
+###  Sıralama
+
+- `name`, `status`, `gender` gibi alanlarda client-side sıralama yapılır.
+- Sıralama API tarafından desteklenmediği için local yapılmaktadır.
+- Sıralama, aynı başlığa tekrar tıklanarak yön (asc/desc) değiştirilebilir.
+
+###  Sayfalama
+
+- Sayfa başına gösterilecek karakter sayısı kullanıcı tarafından seçilebilir.
+- Pagination sunucu tarafında (`page`) parametresi ile API'den alınır.
+- Toplam sayfa sayısı API'nin response’undaki meta bilgiden çekilir.
+
+### Sayfa Başı Gösterilecek Veri Sayısı (pageSize)
+
+Rick and Morty API sabit olarak her sayfada 20 karakter döndürmektedir. Kullanıcının seçtiği `pageSize` değerine göre bu verileri sınırlamak için:
+
+- API'den gelen 20 karakterlik veri, frontend tarafında `slice()` yöntemiyle sınırlandırılır.
+- Örneğin kullanıcı 10 karakter görmek isterse, ilk 10 veri gösterilir ama 1 sayfa yani 20 karakter fetch edilir.
+
+
+###  Karakter Detay Paneli
+
+- Her karaktere tıklanınca detay bilgisi API üzerinden `id` ile alınır.
+- Panel tablo altında görünür, kullanıcı isterse kapanabilir.
+
+---
+
+##  Mimari & State Yönetimi
+
+- Tüm karakter listeleme, filtre, sıralama, detay ve pagination state’leri `useCharacters` adlı custom hook içinde yönetilir.
+- `App.tsx`, sadece bu hook'tan alınan state ve fonksiyonları UI bileşenlerine dağıtır.
+- Böylece bileşenler sadeleştirilmiş, reusable ve test edilebilir hale gelmiştir.
+
+```tsx
+const {
+  setFilters,
+  sortField,
+  sortDirection,
+  characters,
+  loading,
+  error,
+  ...
+} = useCharacters();
 ```
+Uygulamanın Çalıştırılması:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+git clone https://github.com/kdrhnshn/rick-and-morty-app.git
+cd rick-and-morty-app
+npm install
+npm run dev
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+CANLI DEMO (VERCEL)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+https://rick-and-morty-app-two-nu.vercel.app/
