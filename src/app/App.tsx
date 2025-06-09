@@ -23,6 +23,7 @@ function App() {
     detailRef,
     paginatedCharacters,
     totalPages,
+    loading,
   } = useCharacters();
 
   const tableRef = useRef<HTMLDivElement>(null);
@@ -76,6 +77,7 @@ function App() {
           sortField={sortField}
           sortDirection={sortDirection}
           onRowClick={(char) => setSelectedCharacterId(char.id)}
+          loading={loading}
         />
       </section>
 

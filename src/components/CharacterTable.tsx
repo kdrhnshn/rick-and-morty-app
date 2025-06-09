@@ -1,131 +1,3 @@
-/*
-import { useEffect, useState } from 'react';
-import type { Character } from '../types/character';
-import { fetchCharactersWithLimit } from '../services/characterService';
-
-interface CharacterTableProps {
-  pageSize: number;
-  filters?: {
-    name?: string;
-    status?: string;
-    gender?: string;
-  };
-}
-
-export function CharacterTable({ pageSize, filters = {} }: CharacterTableProps) {
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<'name' | 'status' | 'gender' | 'id'>('name');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-
-
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const result = await fetchCharactersWithLimit(pageSize, filters);
-        setCharacters(result);
-      } catch (err: any) {
-        setError(err.message || 'Veri alınamadı.');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
-  }, [pageSize, filters]);
-
-  if (loading) return <div>Yükleniyor...</div>;
-  if (error) return <div>Hata: {error}</div>;
-  if (characters.length === 0) return <div>Karakter bulunamadı.</div>;
-
-  const sortedCharacters = [...characters].sort((a, b) => {
-    const fieldA = a[sortField];
-    const fieldB = b[sortField];
-
-    if (typeof fieldA === 'string' && typeof fieldB === 'string') {
-      return sortOrder === 'asc'
-        ? fieldA.localeCompare(fieldB)
-        : fieldB.localeCompare(fieldA);
-    }
-
-    if (typeof fieldA === 'number' && typeof fieldB === 'number') {
-      return sortOrder === 'asc'
-        ? fieldA - fieldB
-        : fieldB - fieldA;
-    }
-
-    return 0;
-  });
-
-  return (
-     <div className="overflow-x-auto">
-      {/* 🔽 Sıralama Kontrolleri *//*}
-      <div className="mb-4 flex items-center gap-4">
-        <div>
-          <label className="mr-2 font-semibold">Sırala:</label>
-          <select
-            className="border rounded px-2 py-1"
-            value={sortField}
-            onChange={(e) => setSortField(e.target.value as any)}
-          >
-            <option value="name">İsim</option>
-            <option value="status">Durum</option>
-            <option value="gender">Cinsiyet</option>
-            <option value="id">ID</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="mr-2 font-semibold">Yön:</label>
-          <select
-            className="border rounded px-2 py-1"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-          >
-            <option value="asc">Artan</option>
-            <option value="desc">Azalan</option>
-          </select>
-        </div>
-      </div>
-
-      {/* 🔽 Karakter Tablosu *//*}
-      <table className="min-w-full border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="px-4 py-2 border-b">#</th>
-            <th className="px-4 py-2 border-b">İsim</th>
-            <th className="px-4 py-2 border-b">Durum</th>
-            <th className="px-4 py-2 border-b">Cinsiyet</th>
-            <th className="px-4 py-2 border-b">Görsel</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedCharacters.map((char) => (
-            <tr key={char.id} className="hover:bg-gray-50">
-              <td className="px-4 py-2 border-b">{char.id}</td>
-              <td className="px-4 py-2 border-b">{char.name}</td>
-              <td className="px-4 py-2 border-b">{char.status}</td>
-              <td className="px-4 py-2 border-b">{char.gender}</td>
-              <td className="px-4 py-2 border-b">
-                <img
-                  src={char.image}
-                  alt={char.name}
-                  className="w-12 h-12 rounded-full"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}*/
-
-// components/CharacterTable.tsximport React from 'react';
 import type { Character, SortField, SortDirection } from '../types/character';
 
 interface Props {
@@ -134,6 +6,7 @@ interface Props {
   sortDirection: SortDirection;
   onSortChange: (field: SortField) => void;
   onRowClick: (character: Character) => void;
+  loading: boolean;
 }
 
 const CharacterTable: React.FC<Props> = ({
@@ -142,6 +15,7 @@ const CharacterTable: React.FC<Props> = ({
   sortDirection,
   onSortChange,
   onRowClick,
+  loading,
 }) => {
   const renderSortArrow = (field: SortField) => {
     if (field !== sortField) return null;
@@ -171,7 +45,21 @@ const CharacterTable: React.FC<Props> = ({
 
 
   return (
-    <div className="overflow-x-auto rounded-lg shadow-md">
+  <div className="overflow-x-auto rounded-lg shadow-md">
+    
+    {
+      
+      loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) :
+      
+      characters.length === 0 ? (
+        <div className="text-center text-gray-400 py-6 text-sm sm:text-base">
+          No characters found. Try adjusting your filters.
+        </div>
+    ) : (
       <table className="min-w-full text-sm sm:text-base divide-y divide-gray-700 bg-gray-800 rounded-md">
         <thead className="bg-gray-700 text-gray-100 uppercase tracking-wider text-xs ">
           <tr>
@@ -217,8 +105,9 @@ const CharacterTable: React.FC<Props> = ({
           ))}
         </tbody>
       </table>
-    </div>
-  );
+    )}
+  </div>
+);
 };
 
 export default CharacterTable;
