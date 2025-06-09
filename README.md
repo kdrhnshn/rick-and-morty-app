@@ -25,11 +25,17 @@ Bu proje; React, TypeScript ve Tailwind gibi teknolojilerle modern bir SPA geli�
 ## Klasör Yapısı
 
 src/
-├── components/ # Yeniden kullanılabilir UI bileşenleri
+
+├── components/ # Yeniden kullanılabilir UI bileşenleri 
+
 ├── hooks/ # useCharacters: tüm state ve fetch mantığı
+
 ├── services/ # API işlemleri
+
 ├── types/ # Tip tanımlamaları
+
 ├── App.tsx # Uygulamanın omurgası
+
 └── main.tsx # Giriş noktası
 
 
